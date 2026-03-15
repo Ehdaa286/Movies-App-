@@ -9,7 +9,6 @@ import 'package:route_movies_app/modules/layout/profile/view/widgets/history_wid
 import 'package:route_movies_app/modules/layout/profile/view/widgets/wishlist_widget.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 
-
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -23,19 +22,26 @@ class ProfileView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: ColorPalette.bgcolor,
         body: StreamBuilder<DocumentSnapshot>(
-          stream:
-              FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(uid)
-                  .snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(uid)
+              .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
+            // ✅ إصلاح - handle كل الحالات
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return const Center(child: Text("Something went wrong"));
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            var userData = snapshot.data!;
-            String userName = userData["name"] ?? "Unknown";
-            String? photoUrl = userData["avatar"];
+            // ✅ إصلاح - استخدام data() بدل [] مباشرة
+            final data = snapshot.data!.data() as Map<String, dynamic>?;
+            String userName = data?['name'] ?? 'Unknown';
+            String? photoUrl = data?['avatar'];
 
             return Column(
               children: [
@@ -52,27 +58,26 @@ class ProfileView extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(75),
-                                child:
-                                    photoUrl != null && photoUrl.isNotEmpty
-                                        ? (photoUrl.startsWith("http")
-                                            ? Image.network(
-                                              photoUrl,
-                                              width: 150,
-                                              height: 150,
-                                              fit: BoxFit.cover,
-                                            )
-                                            : Image.asset(
-                                              photoUrl,
-                                              width: 130,
-                                              height: 130,
-                                              fit: BoxFit.cover,
-                                            ))
+                                child: photoUrl != null && photoUrl.isNotEmpty
+                                    ? (photoUrl.startsWith("http")
+                                        ? Image.network(
+                                            photoUrl,
+                                            width: 150,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                          )
                                         : Image.asset(
-                                          "assets/images/profileImage.png",
-                                          width: 130,
-                                          height: 130,
-                                          fit: BoxFit.cover,
-                                        ),
+                                            photoUrl,
+                                            width: 130,
+                                            height: 130,
+                                            fit: BoxFit.cover,
+                                          ))
+                                    : Image.asset(
+                                        "assets/images/profileImage.png",
+                                        width: 130,
+                                        height: 130,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                               const SizedBox(height: 15),
                               Text(
@@ -90,7 +95,7 @@ class ProfileView extends StatelessWidget {
                             0.07,
                           ),
 
-                          // wish list column
+                          // wish list count
                           StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection("users")
@@ -123,7 +128,7 @@ class ProfileView extends StatelessWidget {
                             },
                           ).setOnlyPadding(context, 0.035, 0.02, 0.05, 0.02),
 
-                          // history column
+                          // history count
                           StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection("users")
@@ -158,7 +163,7 @@ class ProfileView extends StatelessWidget {
                         ],
                       ),
 
-                      // buttons row
+                      // buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -258,9 +263,9 @@ class ProfileView extends StatelessWidget {
 
                 Expanded(
                   child: TabBarView(
-                    children: [
-                      const WishlistMoviesWidget(),
-                      const HistoryMoviesWidget(),
+                    children: const [
+                      WishlistMoviesWidget(),
+                      HistoryMoviesWidget(),
                     ],
                   ),
                 ),

@@ -1,28 +1,31 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'movie_details_model.dart';
 
-part 'related_movies_response_model.g.dart';
-
-@JsonSerializable()
 class RelatedMoviesResponse {
   final RelatedMoviesData data;
 
   RelatedMoviesResponse({required this.data});
 
   factory RelatedMoviesResponse.fromJson(Map<String, dynamic> json) =>
-      _$RelatedMoviesResponseFromJson(json);
+      RelatedMoviesResponse(
+        data: RelatedMoviesData.fromJson(json['data']),
+      );
 
-  Map<String, dynamic> toJson() => _$RelatedMoviesResponseToJson(this);
+  Map<String, dynamic> toJson() => {'data': data.toJson()};
 }
 
-@JsonSerializable()
 class RelatedMoviesData {
   final List<MovieDetailsModel> movies;
 
   RelatedMoviesData({required this.movies});
 
   factory RelatedMoviesData.fromJson(Map<String, dynamic> json) =>
-      _$RelatedMoviesDataFromJson(json);
+      RelatedMoviesData(
+        movies: (json['movies'] as List<dynamic>? ?? [])
+            .map((e) => MovieDetailsModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
 
-  Map<String, dynamic> toJson() => _$RelatedMoviesDataToJson(this);
+  Map<String, dynamic> toJson() => {
+        'movies': movies.map((e) => e.toJson()).toList(),
+      };
 }

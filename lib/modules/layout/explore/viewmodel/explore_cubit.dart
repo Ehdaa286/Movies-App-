@@ -8,11 +8,14 @@ class ExploreCubit extends Cubit<ExploreState> {
   ExploreCubit(this.getMoviesListUseCase) : super(ExploreInitial());
 
   Future<void> loadMoviesByGenre(String genre) async {
+    if (isClosed) return;
     emit(ExploreLoading());
     try {
       final movies = await getMoviesListUseCase.call(genre: genre);
+      if (isClosed) return;
       emit(ExploreLoaded(movies));
     } catch (e) {
+      if (isClosed) return;
       emit(ExploreError(e.toString()));
     }
   }

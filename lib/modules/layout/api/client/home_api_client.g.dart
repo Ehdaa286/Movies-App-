@@ -1,41 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'home_api_client.dart';
-
-// **************************************************************************
-// RetrofitGenerator
-// **************************************************************************
-
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _HomeApiClient implements HomeApiClient {
   _HomeApiClient(
     this._dio, {
     this.baseUrl,
-    // ignore: unused_element_parameter
     this.errorLogger,
   });
 
   final Dio _dio;
-
   String? baseUrl;
-
   final ParseErrorLogger? errorLogger;
 
   @override
   Future<MovieDataModel> listMovies(String? genre) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'genre': genre};
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final queryParameters = <String, dynamic>{
+      if (genre != null) 'genre': genre,
+    };
     final _options = _setStreamType<MovieDataModel>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(method: 'GET')
           .compose(
             _dio.options,
             '/list_movies.json',
             queryParameters: queryParameters,
-            data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
@@ -52,17 +39,15 @@ class _HomeApiClient implements HomeApiClient {
 
   @override
   Future<MovieDataModel> searchMovies(String query) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'query_term': query};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final queryParameters = <String, dynamic>{
+      'query_term': query,
+    };
     final _options = _setStreamType<MovieDataModel>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(method: 'GET')
           .compose(
             _dio.options,
             '/list_movies.json',
             queryParameters: queryParameters,
-            data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
@@ -94,13 +79,10 @@ class _HomeApiClient implements HomeApiClient {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }
-
     final url = Uri.parse(baseUrl);
-
     if (url.isAbsolute) {
       return url.toString();
     }
-
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

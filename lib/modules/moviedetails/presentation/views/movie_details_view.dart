@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_movies_app/core/extensions/extensions.dart';
-
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/routes/pages_route_name.dart';
 import '../../../../core/theme/color_palette.dart';
@@ -29,8 +28,6 @@ class MovieDetailsView extends StatefulWidget {
 }
 
 class _MovieDetailsViewState extends State<MovieDetailsView> {
-  bool isMarked = false;
-
   @override
   void initState() {
     super.initState();
@@ -44,10 +41,14 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
     return BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
       builder: (context, state) {
         if (state is MovieDetailsLoadingState) {
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (state is MovieDetailsErrorState) {
-          return Center(child: Text(state.message));
+          return Scaffold(
+            body: Center(child: Text(state.message)),
+          );
         }
         if (state is MovieDetailsSuccessState) {
           final movie = state.movieDetails;
@@ -66,7 +67,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    //child: ,
                   ),
                   ListView(
                     padding: EdgeInsets.zero,
@@ -93,7 +93,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                                     isMarked = wishlistState.movies
                                         .any((fav) => fav.id == movie.id);
                                   }
-
                                   return GestureDetector(
                                     onTap: () {
                                       context
@@ -116,46 +115,60 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                             0.04,
                             0.048,
                           ),
+                          const SizedBox(height: 100),
 
-                          SizedBox(height: 100),
+                          // ✅ Play button - بيمرر ytTrailerCode الفعلي
                           GestureDetector(
                             onTap: () {
                               context.read<HistoryCubit>().addToHistory(movie);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => const YoutubePlayerScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => YoutubePlayerScreen(
+                                    videoId: movie.ytTrailerCode,
+                                  ),
+                                ),
                               );
                             },
                             child: Image.asset(AppAssets.playMovieImage),
                           ),
-                          SizedBox(height: 195),
+
+                          const SizedBox(height: 195),
                           Text(
                             movie.title,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Text(
                             movie.year.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
+
+                          // ✅ Watch button - بيمرر ytTrailerCode الفعلي
                           SizedBox(
                             width: double.infinity,
                             child: CustomElevatedButton(
-                              onTap: (){
-                                context.read<HistoryCubit>().addToHistory(movie);
+                              onTap: () {
+                                context
+                                    .read<HistoryCubit>()
+                                    .addToHistory(movie);
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const YoutubePlayerScreen()),
+                                  MaterialPageRoute(
+                                    builder: (_) => YoutubePlayerScreen(
+                                      videoId: movie.ytTrailerCode,
+                                    ),
+                                  ),
                                 );
                               },
                               borderRadius: 15,
@@ -165,7 +178,8 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               titleSize: 22,
                             ),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 10),
+
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -183,7 +197,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -195,22 +209,22 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               ),
                             ),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(18),
                             child: Image.network(movie.largeScreenshot1),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(18),
                             child: Image.network(movie.largeScreenshot2),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(18),
                             child: Image.network(movie.largeScreenshot3),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -222,7 +236,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               ),
                             ),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
 
                           BlocBuilder<RelatedMoviesCubit, RelatedMoviesState>(
                             builder: (context, state) {
@@ -235,13 +249,12 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                                 return Center(
                                   child: Text(
                                     state.message,
-                                    style: TextStyle(color: Colors.red),
+                                    style: const TextStyle(color: Colors.red),
                                   ),
                                 );
                               }
                               if (state is RelatedMoviesSuccessState) {
                                 final relatedMovies = state.relatedMovies;
-
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -250,33 +263,34 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                      ),
-                                      itemCount:
-                                          relatedMovies.length > 4
-                                              ? 4
-                                              : relatedMovies.length,
+                                          horizontal: 12),
+                                      itemCount: relatedMovies.length > 4
+                                          ? 4
+                                          : relatedMovies.length,
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            crossAxisSpacing: 12,
-                                            mainAxisSpacing: 12,
-                                            childAspectRatio: 0.65,
-                                          ),
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 12,
+                                        mainAxisSpacing: 12,
+                                        childAspectRatio: 0.65,
+                                      ),
                                       itemBuilder: (context, index) {
-                                        final movie = relatedMovies[index];
+                                        final relatedMovie =
+                                            relatedMovies[index];
                                         return GestureDetector(
                                           onTap: () {
                                             Navigator.pushNamed(
                                               context,
                                               PagesRouteName.movieDetails,
-                                              arguments: movie.id.toString(),
+                                              arguments:
+                                                  relatedMovie.id.toString(),
                                             );
                                           },
                                           child: ContinerfilmWidget(
                                             ImagePathDetails:
-                                                movie.mediumCoverImage,
-                                            rating: movie.rating.toString(),
+                                                relatedMovie.mediumCoverImage,
+                                            rating:
+                                                relatedMovie.rating.toString(),
                                           ),
                                         );
                                       },
@@ -309,7 +323,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                             },
                           ),
 
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -321,26 +335,23 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               ),
                             ),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           Column(
-                            children:
-                                movie.cast
-                                    .map(
-                                      (c) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 6,
-                                        ),
-                                        child: CastContainer(
-                                          name: c.name,
-                                          character: c.characterName,
-                                          imagepath: c.smallImage,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                            children: movie.cast
+                                .map(
+                                  (c) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 6),
+                                    child: CastContainer(
+                                      name: c.name,
+                                      character: c.characterName,
+                                      imagepath: c.smallImage,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
                           ),
-
-                          SizedBox(height: 18),
+                          const SizedBox(height: 18),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -352,20 +363,20 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               ),
                             ),
                           ).setHorizontalPadding(context, 0.035),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Wrap(
                             spacing: 12,
                             runSpacing: 12,
-                            children:
-                                (movie.genres)
-                                    .map(
-                                      (genre) => ContainerWidget(
-                                        text: genre,
-                                        fontSize: 16,
-                                      ),
-                                    )
-                                    .toList(),
+                            children: movie.genres
+                                .map(
+                                  (genre) => ContainerWidget(
+                                    text: genre,
+                                    fontSize: 16,
+                                  ),
+                                )
+                                .toList(),
                           ).setHorizontalPadding(context, 0.02),
+                          const SizedBox(height: 30),
                         ],
                       ),
                     ],
