@@ -55,8 +55,7 @@ class HistoryCubit extends Cubit<HistoryState> {
 
       final movies =
           snapshot.docs.map((doc) {
-            // ignore: unused_local_variable
-            final data = doc.data();
+            doc.data();
             return MovieDetailsModel.fromJson(doc.data()).toEntity();
           }).toList();
 

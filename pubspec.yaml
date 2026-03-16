@@ -22,17 +22,17 @@ dependencies:
   cached_network_image: ^3.4.1
   injectable: ^2.5.1
   get_it: ^8.2.0
-  retrofit: ^4.1.0        # ✅ واحدة بس
+  retrofit: ^4.1.0        
   flutter_bloc: ^9.1.1
   dio: ^5.9.0
   shared_preferences: ^2.5.3
   cloud_firestore: ^5.4.3
-  youtube_player_flutter: ^9.0.0
+  youtube_player_flutter:  ^9.0.0
+  flutter_inappwebview: ^6.0.0
   json_annotation: any
 
 dev_dependencies:
-    # ✅ واحدة بس - متوافقة مع retrofit ^4.1.0
-  build_runner: ^2.4.13        # ✅ واحدة بس - أحدث version
+  build_runner: ^2.4.13        
   injectable_generator: ^2.6.2
   json_serializable: ^6.8.0
   flutter_test:

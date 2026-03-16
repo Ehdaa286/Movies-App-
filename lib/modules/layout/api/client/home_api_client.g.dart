@@ -5,6 +5,7 @@ class _HomeApiClient implements HomeApiClient {
   _HomeApiClient(
     this._dio, {
     this.baseUrl,
+    // ignore: unused_element_parameter
     this.errorLogger,
   });
 
@@ -39,9 +40,7 @@ class _HomeApiClient implements HomeApiClient {
 
   @override
   Future<MovieDataModel> searchMovies(String query) async {
-    final queryParameters = <String, dynamic>{
-      'query_term': query,
-    };
+    final queryParameters = <String, dynamic>{'query_term': query};
     final _options = _setStreamType<MovieDataModel>(
       Options(method: 'GET')
           .compose(

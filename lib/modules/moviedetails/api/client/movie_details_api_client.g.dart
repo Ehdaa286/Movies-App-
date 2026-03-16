@@ -5,6 +5,7 @@ class _MovieDetailsApiClient implements MovieDetailsApiClient {
   _MovieDetailsApiClient(
     this._dio, {
     this.baseUrl,
+    // ignore: unused_element_parameter
     this.errorLogger,
   });
 
@@ -25,8 +26,11 @@ class _MovieDetailsApiClient implements MovieDetailsApiClient {
     };
     final _options = _setStreamType<MovieDetailsResponse>(
       Options(method: 'GET')
-          .compose(_dio.options, '/movie_details.json',
-              queryParameters: queryParameters)
+          .compose(
+            _dio.options,
+            '/movie_details.json',
+            queryParameters: queryParameters,
+          )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
@@ -45,8 +49,11 @@ class _MovieDetailsApiClient implements MovieDetailsApiClient {
     final queryParameters = <String, dynamic>{'movie_id': movieId};
     final _options = _setStreamType<RelatedMoviesResponse>(
       Options(method: 'GET')
-          .compose(_dio.options, '/movie_suggestions.json',
-              queryParameters: queryParameters)
+          .compose(
+            _dio.options,
+            '/movie_suggestions.json',
+            queryParameters: queryParameters,
+          )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
@@ -85,8 +92,11 @@ class _MovieDetailsApiClient implements MovieDetailsApiClient {
     };
     final _options = _setStreamType<ListMoviesResponse>(
       Options(method: 'GET')
-          .compose(_dio.options, '/list_movies.json',
-              queryParameters: queryParameters)
+          .compose(
+            _dio.options,
+            '/list_movies.json',
+            queryParameters: queryParameters,
+          )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
@@ -105,8 +115,11 @@ class _MovieDetailsApiClient implements MovieDetailsApiClient {
     final queryParameters = <String, dynamic>{'movie_id': movieId};
     final _options = _setStreamType<ParentalGuidesResponse>(
       Options(method: 'GET')
-          .compose(_dio.options, '/movie_parental_guides.json',
-              queryParameters: queryParameters)
+          .compose(
+            _dio.options,
+            '/movie_parental_guides.json',
+            queryParameters: queryParameters,
+          )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
